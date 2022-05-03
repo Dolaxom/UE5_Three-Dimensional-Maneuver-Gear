@@ -12,6 +12,14 @@ class TDMG_API ATDMGBaseCharacter : public ACharacter
 public:
 	ATDMGBaseCharacter();
 
+	// Controller //
+	virtual void MoveForward(float Value) {};
+	virtual void MoveRight(float Value) {};
+	virtual void Turn(float Value) {};
+	virtual void LookUp(float Value) {};
+	virtual void StartFire();
+	virtual void StopFire();
+
 protected:
 	virtual void BeginPlay() override;
 
