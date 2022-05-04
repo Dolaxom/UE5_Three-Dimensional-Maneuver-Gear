@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "TDMGBaseCharacter.generated.h"
 
-UCLASS()
+UCLASS(Abstract, NotBlueprintable)
 class TDMG_API ATDMGBaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -17,8 +17,8 @@ public:
 	virtual void MoveRight(float Value) {};
 	virtual void Turn(float Value) {};
 	virtual void LookUp(float Value) {};
-	virtual void StartFire();
-	virtual void StopFire();
+	virtual void StartFire() {};
+	virtual void StopFire() {};
 
 protected:
 	virtual void BeginPlay() override;

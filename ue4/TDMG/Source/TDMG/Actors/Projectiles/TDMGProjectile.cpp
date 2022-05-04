@@ -1,24 +1,44 @@
 #include "TDMGProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
-// Sets default values
 ATDMGProjectile::ATDMGProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	MeshComponent->SetCollisionResponseToAllChannels(ECR_Block);
+	SetRootComponent(MeshComponent);
 
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	ProjectileMovementComponent->InitialSpeed = 1500.f;
 }
 
-// Called when the game starts or when spawned
+void ATDMGProjectile::LaunchProjectile(FVector Direction)
+{
+	FVector Velocity = ProjectileMovementComponent->Velocity;
+	float Speed = ProjectileMovementComponent->InitialSpeed;
+	Velocity = Direction * Speed;
+	MeshComponent->IgnoreActorWhenMoving(GetOwner(), true);
+	OnProjectileLaunched();
+}
+
 void ATDMGProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MeshComponent->OnComponentHit.AddDynamic(this, &ATDMGProjectile::OnCollisionHit);
 }
 
-// Called every frame
-void ATDMGProjectile::Tick(float DeltaTime)
+void ATDMGProjectile::OnProjectileLaunched()
 {
-	Super::Tick(DeltaTime);
-
+	
 }
+
+void ATDMGProjectile::OnCollisionHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if(OnProjectileHitEvent.IsBound())
+	{
+		OnProjectileHitEvent.Broadcast(Hit, ProjectileMovementComponent->Velocity.GetSafeNormal());
+	}
+}
+
 
