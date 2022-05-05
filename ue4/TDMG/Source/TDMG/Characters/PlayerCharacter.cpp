@@ -2,6 +2,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "TDMG/Actors/Projectiles/TDMGProjectile.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -59,26 +60,42 @@ void APlayerCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+void APlayerCharacter::ProcessHit(const FHitResult& HitResult, const FVector& Direction)
+{
+	FVector ShotStart = HitResult.TraceStart;
+	FVector ShotEnd = HitResult.ImpactPoint;
+	float ShotDistance = (ShotStart - ShotEnd).Size();
+	
+	UE_LOG(LogTemp, Warning, TEXT("ABOBA!!!"));
+	GetCharacterMovement()->AddImpulse(this->GetActorForwardVector() * 1000, true);
+}
+
 void APlayerCharacter::StartFire()
 {
 	Super::StartFire();
+
+	const FRotator SpawnRot = GetActorRotation();
+	const FVector SpawnLocOne = GetActorLocation() + SpawnRot.RotateVector(FiringOffsetOne);
+	const FVector SpawnLocTwo = GetActorLocation() + SpawnRot.RotateVector(FiringOffsetTwo);
+
+	ATDMGProjectile* ProjectileFirst = GetWorld()->SpawnActor<ATDMGProjectile>(ProjectileClass, SpawnLocOne, SpawnRot);
+	ATDMGProjectile* ProjectileSecond = GetWorld()->SpawnActor<ATDMGProjectile>(ProjectileClass, SpawnLocTwo, SpawnRot);
 	
-	if(!IsValid(ProjectileType))
+	if(!IsValid(ProjectileFirst) || !IsValid(ProjectileSecond))
 	{
 		return;
 	}
 
-	FRotator SpawnRot = GetActorRotation();
-	FVector SpawnLocOne = GetActorLocation() + SpawnRot.RotateVector(FiringOffsetOne);
-	FVector SpawnLocTwo = GetActorLocation() + SpawnRot.RotateVector(FiringOffsetTwo);
-	AActor* SpawnedActorOne = GetWorld()->SpawnActor(ProjectileType, &SpawnLocOne, &SpawnRot);
-	AActor* SpawnedActorTwo = GetWorld()->SpawnActor(ProjectileType, &SpawnLocTwo, &SpawnRot);
+	ProjectileFirst->OnProjectileHitEvent.AddDynamic(this, &APlayerCharacter::ProcessHit);
+	ProjectileSecond->OnProjectileHitEvent.AddDynamic(this, &APlayerCharacter::ProcessHit);
 }
 
 void APlayerCharacter::StopFire()
 {
 	Super::StopFire();
 }
+
+
 
 
 

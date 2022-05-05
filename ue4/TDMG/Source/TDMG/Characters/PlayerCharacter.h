@@ -27,11 +27,15 @@ protected:
 	class USpringArmComponent* SpringArmComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TDMG | Projectile")
-	TSubclassOf<AActor> ProjectileType;
+	TSubclassOf<class ATDMGProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TDMG | Projectile")
 	FVector FiringOffsetOne = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TDMG | Projectile")
 	FVector FiringOffsetTwo = FVector::ZeroVector;
+
+private:
+	UFUNCTION()
+	void ProcessHit(const FHitResult& HitResult, const FVector& Direction);
 };

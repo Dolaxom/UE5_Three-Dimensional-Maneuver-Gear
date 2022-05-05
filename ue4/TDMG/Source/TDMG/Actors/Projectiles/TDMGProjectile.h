@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "TDMGProjectile.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectileHit, const FHitResult&, HitResult, const FVector&, Direction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectileHit, const FHitResult&, Hit, const FVector&, Direction);
 
 UCLASS()
 class TDMG_API ATDMGProjectile : public AActor

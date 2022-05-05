@@ -9,7 +9,7 @@ ATDMGProjectile::ATDMGProjectile()
 	SetRootComponent(MeshComponent);
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
-	ProjectileMovementComponent->InitialSpeed = 1500.f;
+	ProjectileMovementComponent->InitialSpeed = 5000.f;
 }
 
 void ATDMGProjectile::LaunchProjectile(FVector Direction)
