@@ -60,6 +60,7 @@ void APlayerCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+// Функция при столкновении с объектом (делегат в TDMGProjectile)
 void APlayerCharacter::ProcessHit(const FHitResult& HitResult, const FVector& Direction)
 {
 	FVector ShotStart = HitResult.TraceStart;
@@ -70,6 +71,7 @@ void APlayerCharacter::ProcessHit(const FHitResult& HitResult, const FVector& Di
 	GetCharacterMovement()->AddImpulse(this->GetActorForwardVector() * 1000, true);
 }
 
+// Спавн гарпуна и вызов функции при столкновении
 void APlayerCharacter::StartFire()
 {
 	Super::StartFire();
@@ -90,6 +92,7 @@ void APlayerCharacter::StartFire()
 	ProjectileSecond->OnProjectileHitEvent.AddDynamic(this, &APlayerCharacter::ProcessHit);
 }
 
+// В перспективе нужно удалить, не умеет в себе смысла
 void APlayerCharacter::StopFire()
 {
 	Super::StopFire();

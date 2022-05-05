@@ -12,6 +12,7 @@ ATDMGProjectile::ATDMGProjectile()
 	ProjectileMovementComponent->InitialSpeed = 5000.f;
 }
 
+// Запуск гарпуна
 void ATDMGProjectile::LaunchProjectile(FVector Direction)
 {
 	FVector Velocity = ProjectileMovementComponent->Velocity;
@@ -33,6 +34,7 @@ void ATDMGProjectile::OnProjectileLaunched()
 	
 }
 
+// Функция вызывается при столкновении гарпуна с объектом
 void ATDMGProjectile::OnCollisionHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if(OnProjectileHitEvent.IsBound())
